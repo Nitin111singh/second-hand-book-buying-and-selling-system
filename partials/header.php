@@ -13,8 +13,8 @@ crossorigin="anonymous"></script>
 <!-- Bootstrap files (jQuery first, then Popper.js, then Bootstrap JS) -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" type="text/javascript"></script>
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
 <style type="text/css">
 /* ============ desktop view ============ */
 @media all and (min-width: 992px) {
@@ -78,28 +78,109 @@ crossorigin="anonymous"></script>
         
       echo'</ul>
       <div class="row mx-2">';
-
+      
       if(isset($_SESSION['loggedin'])&& $_SESSION['loggedin']==true) 
-      {
+      { $uid = $_SESSION['uid'];
+
+          // Delete the item from the shopping_basket table
+          $sql = "select count(*) from  shopping_basket u_id = $uid";
+        $result = mysqli_query($conn,$sqlq);
+
        echo' <form class="form-inline my-2 my-lg-0" method="get" action="search.php">
-       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
-       <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
-     
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" id="searchInput">
+  <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+       <button class="btn btn-outline-success ml-2" id="micBtn"><i class="fas fa-microphone"></i></button>
+       <form class="form-inline my-2 my-lg-0" method="get" action="search.php">
   <a class="nav-link" href="/books_selling-main/shopping_cart.php">
     <i class="fas fa-shopping-cart shopping-cart-icon"></i>
   </a>
  
        <p class="text-dark my-0 mx-2"> Welcome '.$_SESSION['useremail'].'</p>
        <a href="partials/logout_hndl.php" class="btn btn-outline-success ml-2" >Logout</a>
-     </form>'; 
+     </form>';
+
+echo '<script>
+  const micBtn = document.querySelector("#micBtn");
+  const searchInput = document.querySelector("#searchInput");
+
+  micBtn.addEventListener("click", () => {
+    const recognition = new webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    recognition.start();
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      searchInput.value = transcript;
+      
+      if (transcript === "go to home" || transcript ==="continue shopping") {
+        const msg = new SpeechSynthesisUtterance("Redirecting to home page HAPPY SHOPPING");
+        window.speechSynthesis.speak(msg);
+        setTimeout(() => {
+          window.location.href = "index.php";
+        }, 2000);
+      } else if (transcript === "go to shopping") {
+        const msg = new SpeechSynthesisUtterance("Redirecting to shopping cart page ");
+        window.speechSynthesis.speak(msg);
+        setTimeout(() => {
+          window.location.href = "shopping_cart.php";
+        }, 2000);
+
+      }else if (transcript === "logout me" || transcript ==="logout") {
+        const msg = new SpeechSynthesisUtterance("Signing off see you later");
+        window.speechSynthesis.speak(msg);
+        setTimeout(() => {
+          window.location.href = "partials/logout_hndl.php";
+        }, 2000);
+      }
+       else if (transcript === "hello") {
+        const msg = new SpeechSynthesisUtterance("Hello '.$_SESSION['useremail'].'  how can I help you");
+        window.speechSynthesis.speak(msg)
+       }
+        else if (transcript === "go to request") {
+        const msg = new SpeechSynthesisUtterance("Redirecting to request page");
+        window.speechSynthesis.speak(msg)
+         setTimeout(() => {
+          window.location.href = "request.php";
+        }, 2000);
+       
+       }
+    };
+  });
+</script>';
+
       } 
 else{
+ 
   echo'<form class="form-inline my-2 my-lg-0"  method="get" action="search.php">
-  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" id="searchInput">
   <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
 </form>
+<button class="btn btn-outline-success ml-2" id="micBtn"><i class="fas fa-microphone"></i></button>
   <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#loginmodal">Login</button>
   <button class="btn btn-outline-success mx-2 "data-toggle="modal" data-target="#signupmodal">Signup</button>';
+ echo '<script>
+        const micBtn = document.querySelector("#micBtn");
+        const searchInput = document.querySelector("#searchInput");
+
+        micBtn.addEventListener("click", () => {
+          const recognition = new webkitSpeechRecognition();
+          recognition.continuous = false;
+          recognition.interimResults = false;
+          recognition.lang = "en-US";
+        
+          recognition.start();
+
+          recognition.onresult = (event) => {
+            searchInput.value = event.results[0][0].transcript;
+            recognition.stop();
+          };
+        });
+      </script>';
+
 }
       
  echo'</div>
@@ -144,4 +225,6 @@ else{
     </button>
   </div>';
   }
+
+ 
 ?>

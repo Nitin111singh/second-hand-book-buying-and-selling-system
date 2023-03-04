@@ -106,6 +106,7 @@
             </div>
             <!--end row-->
         </div>
+        
         <a class="btn btn-primary btn-lg" href="#" role="button" data-toggle="modal" data-target="#buyrequestmodal">Buying Request!</a>
         
     </div>

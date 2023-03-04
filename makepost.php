@@ -53,12 +53,12 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="ogprice">Original Price</label>
-                    <input type="text" class="form-control" id="orgprice" name="ogpric">
+                    <input type="number" class="form-control" id="orgprice" name="ogpric">
                     <h5 id="ogpchk"></h5>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="exprice">Expected Price</label>
-                    <input type="text" class="form-control" id="exprice" name="expric">
+                    <input type="number" class="form-control" id="exprice" name="expric">
                 </div>
             </div>
 
@@ -82,6 +82,9 @@
                             </label>
                         </div>
                     </div>
+                    <script>
+                      
+                    </script>
 
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -147,7 +150,43 @@
                 <div class="form-group ">
                     <button type="submit" class="btn btn-primary col-md-12" id="subtn" name="booksubmit">Submit</button>
                 </div>
-                <script type="text/javascript" src="partials/jqryfile2.js"></script>
+  <script>
+      const fileInput = document.getElementById('File1');
+
+const submitButton = document.getElementById('subtn');
+
+// Add an event listener to the file input element
+fileInput.addEventListener('change', async function() {
+  // Create a new FormData object
+  const formData = new FormData();
+  
+  // Add the selected file and book title to the FormData object
+  formData.append('image', fileInput.files[0]);
+
+  // Send a POST request to the Python script
+  const response = await fetch('http://127.0.0.1:5000/classify', {
+    method: 'POST',
+    body: formData
+  });
+
+  // Get the response data as JSON
+  const responseData = await response.json();
+  const responseDataString = JSON.stringify(responseData);
+  console.log(responseDataString);
+
+  // Check if the response contains the string "book jacket"
+  if (responseDataString.includes('book jacket')) {
+    // Enable the submit button
+    submitButton.disabled = false;
+  } else {
+    // Disable the submit button and display an error message
+    submitButton.disabled = true;
+    alert('Please select a book cover image.');
+  }
+});
+  </script>
+                <script type="text/javascript" src="partials/jqryfile2.js">    
+                </script>
         </form>
     </div>
 

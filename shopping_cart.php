@@ -43,9 +43,9 @@
                         while($row=mysqli_fetch_assoc($result)){ ?>
                                 <table class="table table-bordered">
                                     <thead>
-                                    <th>Product Image</th>
-                                    <th>Product Name</th>
-                                    <th width="120px">Product Price</th>
+                                    <th>Book Image</th>
+                                    <th>Book Name</th>
+                                    <th width="120px">Book Price</th>
                                     <th>Action</th>
                                     </thead>
                                     <tbody>
@@ -63,7 +63,7 @@
                                         <td><img src="upload/<?php echo $row['pic1']; ?>" alt="" width="70px" /></td>
                                        <td><a href="post.php?pid=<?php echo $p_id; ?>" class="text-dark"><?php echo $row['b_name']; ?></a></td>
 
-                                        <td> <span class="product-price"><?php echo $row['ex_pr']; ?></span></td>
+                                        <td> <span class="book-price"><?php echo $row['ex_pr']; ?></span></td>
                                         <td>
                                           
                                          <!-- <button class="btn btn-sm btn-primary remove-cart-item" data-id="<?php echo $row['p_id']; ?>">Delete</button> -->

@@ -12,84 +12,102 @@
   </head>
   <body>
   
-  <?php include'partials/header.php';?>
-  <!--<h1>Hot Books!</h1>-->  
+  <?php include 'partials/header.php';?>
   
-  <?php include'partials/corousel.php';
-  ?>
-<center><h1 ></br> </h1></center>
-<div class="row mx-2 block">
-    <?php $i=0;
-    include 'partials/dbconnect.php';
-    #session_start();
-    #$e_id = $_SESSION['uid'];
-    $sql="SELECT * FROM `postbook` ORDER BY `postbook`.`dt_creation` DESC LIMIT 4";//
-    $result = mysqli_query($conn,$sql);
-    while($row=mysqli_fetch_assoc($result))
-    {    $bok_n=$row['b_name'];
-      $og_pr=$row['og_pr'];
-      $ex_pr=$row['ex_pr'];
-      $time=$row['dt_creation'];
-      $pic=$row['pic1'];
-      $p_id=$row['p_id'];
-      echo '<div class="book-card">
-      <img src="project_x_copy/'.$pic.'" class="book-cover" alt="'.$bok_n.'" width="500" height="250">
-      <div class="book-info">
-        <h5 class="book-title">
-          <a href="post.php?pid='.$p_id.'" class="text-dark">
-            '.$bok_n.'
-          </a>
-        </h5>
-        <p class="book-price">
-          Original Price: <span class="original-price">'.$og_pr .'</span>
-        </p>
-        <p class="book-price">
-          Expected Price: <span class="expected-price">'.$ex_pr .'</span>
-        </p>
-        <p class="book-updated">
-          <small class="text-muted">Last updated '.$time.'</small>
-        </p>
-        <a href="addcart.php?p_id='.$p_id.'" class="btn btn-outline-success ml-2">ADD TO CART</a>
-      </div>
-    </div>
-    <style>
-    .book-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 20%;
-      margin: 2rem;
-      border: 1px solid grey;
-      border-radius: 5px;
-    }
-    
-    .book-cover {
-      width: 100%;
-    }
-    
-    .book-info {
-      padding: 1rem;
-      text-align: center;
-    }
-    
-    .book-title {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-    
-    .book-price, .book-updated {
-      margin-top: 0.5rem;
-    }
-    
-    .original-price, .expected-price {
-      font-style: italic;
-    }
-    </style>
-    ';
-
+  <?php include 'partials/corousel.php';?>
+  
+  <h1 class="text-center mt-4">Latest adds!</h1>
+  
+  <div class="container">
+    <div class="row mx-2">
+      <?php 
+      include 'partials/dbconnect.php';   
+      if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+        $e_id = $_SESSION['uid'];
+        $sql = "SELECT * FROM `postbook` WHERE `p_id` NOT IN (SELECT `p_id` FROM postbook WHERE `usenam`=$e_id) ORDER BY `postbook`.`dt_creation` DESC LIMIT 4";
+      }
+      else {
+        $sql="SELECT * FROM `postbook` ORDER BY `postbook`.`dt_creation` DESC LIMIT 3";
+      }
+      $result = mysqli_query($conn, $sql);
+      $count = mysqli_num_rows($result);
+      if($count > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+          $bok_n = $row['b_name'];
+          $og_pr = $row['og_pr'];
+          $ex_pr = $row['ex_pr'];
+          $time = $row['dt_creation'];
+          $pic = $row['pic1'];
+          $p_id = $row['p_id'];
+          echo '<div class="book-card col-md-3">
+            <img src="project_x_copy/'.$pic.'" class="book-cover" alt="'.$bok_n.'" width="100%">
+            <div class="book-info">
+              <h5 class="book-title">
+                <a href="post.php?pid='.$p_id.'" class="text-dark">
+                  '.$bok_n.'
+                </a>
+              </h5>
+              <p class="book-price">
+                Original Price: <span class="original-price">'.$og_pr.'</span>
+              </p>
+              <p class="book-price">
+                Expected Price: <span class="expected-price">'.$ex_pr.'</span>
+              </p>
+              <p class="book-updated">
+                <small class="text-muted">Last updated '.$time.'</small>
+              </p>
+              <a href="addcart.php?p_id='.$p_id.'" class="btn btn-outline-success ml-2">ADD TO CART</a>
+            </div>
+          </div>
+          <style>
+          .book-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem;
+  border: 1px solid grey;
+  border-radius: 5px;
 }
-?>
-</div>
+
+.book-cover {
+  width: 100%;
+}
+
+.book-info {
+  padding: 1rem;
+  text-align: center;
+}
+
+.book-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.book-price,
+.book-updated {
+  margin-top: 0.5rem;
+}
+
+.original-price,
+.expected-price {
+  font-style: italic;
+}
+
+.book-card:nth-child(odd) {
+  margin-right: auto;
+}
+
+.book-card:nth-child(even) {
+  margin-left: auto;
+}
+</style>';
+        }
+      } else {
+        echo '<p class="text-center">No books available at the moment.</p>';
+      }
+      ?>
+    </div>
+  </div>
   <?php include'partials/footer.php';?>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
