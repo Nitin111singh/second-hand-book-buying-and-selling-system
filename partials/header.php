@@ -161,7 +161,8 @@ else{
 </form>
 <button class="btn btn-outline-success ml-2" id="micBtn"><i class="fas fa-microphone"></i></button>
   <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#loginmodal">Login</button>
-  <button class="btn btn-outline-success mx-2 "data-toggle="modal" data-target="#signupmodal">Signup</button>';
+  <button class="btn btn-outline-success mx-2 "data-toggle="modal" data-target="#signupmodal">Signup</button>
+  <a class="nav-link" href="admin/authenticate.php"><i class="fa fa-lock" aria-hidden="true"></i> Admin</a>';
  echo '<script>
         const micBtn = document.querySelector("#micBtn");
         const searchInput = document.querySelector("#searchInput");
